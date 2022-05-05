@@ -1,54 +1,75 @@
-                .data
-msg:            .asciiz "Inserire la parola:\n"
-pal:            .asciiz "La parola e' palindroma"
-npal:           .asciiz "La parola non e' palindroma"
-                .text
-                
-                .globl main
-                .ent main
+		.data
+msg: 	.asciiz "Inserisci la stringa\n"
+npa: 	.asciiz "La stringa non e' palindroma"
+pa: 	.asciiz "La stringa e' palindroma!"
 
+		.text
+		.globl main
+		.ent main
 main:
-                add $t1, $t1, $0
-                add $t5, $t5, $0
-                la $a0, msg
-                li $v0, 4
-                syscall
-                move $t0, $sp
+	
+	la $a0, msg
+	li $v0, 4
+	syscall
+	
+	add $t0, $t0, $0                #contatore
 
 
-robusta:
-                addi $sp, $sp, -4
-                li $v0, 12
-                syscall
-                addi $t1, $t1, 1
-                sw $v0, ($sp)
-                bne $v0, '\n', robusta
-                addi $t1, $t1, -1
-                div $t4, $t1, 2
+	addi $sp, $sp, -4               #Spazio primo carattere
+
+	add $s0, $s0, $sp               #Salvol il valore dello stack-point
+	
+	
+
+for:
+
+	li $v0, 12
+	syscall
+	
+	beq $v0, '\n', controllo        #Controllo invio	
+	
+	sw $v0, ($sp)                   #Carico valore nello stack
+	addi $sp, $sp, -4               
+	
+    addi $t0, $t0, 1
+	
+	j for
+				  
+
 
 controllo:
-                addi $sp, $sp, 4
-                addi $t0, $t0, -4
-                addi $t5, $t5, 1
-                lw $t2, ($sp)
-                lw $t3, ($t0)
-                bne $t1, $t0 controllo
-                bne $t2, $t3, npa
-                j pa
 
-npa:
-                la $a0, npal
-                li $v0, 4
-                syscall
-                j fine
+	beq $t0, $0, pal
+	
+	lw $t1, ($s0)                   #Carico il valore dal basso
+	
+	addi $sp, $sp, 4                #Pop
+	lw $t2, ($sp)
 
-pa:
-                la $a0, pal
-                li $v0, 4
-                syscall
+	bne $t1, $t2, nopa
+	
+	addi $s0, $s0, -4
+	
+	addi $t0, $t0, -1 #i--
 
-fine:
-                li $v0, 10
-                syscall
+	j controllo
 
+nopa:
+
+	la $a0, npa
+	li $v0, 4
+	syscall
+	
+	j end
+
+pal:
+	la $a0, pa
+	li $v0, 4
+	syscall
+	
+end:
+
+	li $v0, 10
+	syscall
+	
 .end main
