@@ -1,94 +1,51 @@
-.data
 DIM = 5
-matrix: .word 1, 4, 5, 6, 7
-        .word 4, 2, 8, 6, 4
-        .word 5, 8, 3, 2, 9
-        .word 6, 6, 2, 4, 4
-        .word 7, 4, 9, 4, 5
+NEXT_COL = 4
+NEXT_ROW = 4*DIM
+NEXT_DIAG = 4*(DIM+1)
+        .data
+matrix: 
+        .word 1, 0, 0, 0, 0
+        .word 0, 2, 0, 1, 0
+        .word 0, 0, 3, 0, 0
+        .word 0, 1, 0, 4, 0
+        .word 0, 0, 0, 0, 5
+        .text
+        .globl main
+        .ent main
 
+main: 
+        la $t0, matrix # $t0 puntatore a elemento su diagonale
+        li $t1, DIM-1 # $t1 contatore ciclo esterno
+        li $a0, 2 # $a0 risultato (ipotesi iniziale: diagonale)
 
+ciclo1: 
+        move $t2, $t1 # $t2 contatore ciclo interno
+        move $t3, $t0 # $t3 puntatore a elementi su riga
+        move $t4, $t0 # $t4 puntatore a elementi su colonna
 
-simno: .asciiz "0" #non simmetrica
-simsi: .asciiz "1" #simmetrica
-diag: .asciiz "2" #diagonale
+ciclo2: 
+        addiu $t3, $t3, NEXT_COL
+        addiu $t4, $t4, NEXT_ROW
+        lw $t6, ($t3)
+        beq $t6, 0, next
+        li $a0, 1 # non e' diagonale
 
-.text
-.globl main
-.ent main
+next: 
+        lw $t7, ($t4)
+        bne $t6, $t7, no_simm # se non e' simmetrica (ne' diagonale), # esco dal ciclo
+        sub $t2, $t2, 1
+        bne $t2, 0, ciclo2
+        addiu $t0, $t0, NEXT_DIAG
+        sub $t1, $t1, 1
+        bne $t1, 0, ciclo1
+        b fine
 
-main:
+no_simm:
+        li $a0, 0
 
-    la $t0, matrix #carico indirizzo matrice
-    la $t1, matrix #salvo per dopo
-    li $s0, 0 #i=0
-    add $s2, DIM, -1
-    li $t9, 20
-    li $s4, 0
-    li $t7, 0
-
-    addi $t0, $t0, 4
-    add $t1, $t1, $t9   #posiziono i puntatori correttamente
-
-
-
-          while1:
-                  beq $s1,$s2, reset # se il ciclo  è stato eseguito 5 volte vado a res
-                  lw $t5, 0($t0) #carico elemento riga matrix
-                  lw $t6, 0($t1) #carico elemento colonna matrix
-
-                  addi $t0, $t0, 4
-                  add $t1, $t9, $t1
-
-                  addi $s1, $s1, 1
-                  bne $t5, $t6, nosim
-                  beq $s4, 3, sim
-                  add $t7, $t5, $t7
-                  add $t7, $t7, $t6
-
-                  j while1
-
-
-          reset:  addi $s0, $s0, 6
-                  la $t0, matrix #carico indirizzo matrice
-                  la $t1, matrix #salvo per dopo
-
-                  move $s1, $0
-                  addi $s2, $s2, -1
-                  mul $s5, $s0, 4
-                  add $t0, $t0, $s5
-                  add $t1, $t1, $s5
-                  addi $s4, $s4, 1
-
-
-                  addi $t0, $t0, 4
-                  add $t1, $t1, $t9   #posiziono i puntatori correttamente
-                  j    while1        # jump to while 1
-
-nosim:
-            la $a0, simno
-            li $v0, 4
-            syscall
-
-            li $v0, 10
-            syscall
-
-sim:        beq    $t7, 0, diagonale  # if $t7 == 0 then diagonale
-
-
-            la $a0, simsi
-            li $v0, 4
-            syscall
-
-            li $v0, 10
-            syscall
-
-diagonale:
-
-            la $a0, diag
-            li $v0, 4
-            syscall
-
-            li $v0, 10
-            syscall
-
+fine: 
+        li $v0, 1
+        syscall
+        li $v0, 10
+        syscall
 .end main
