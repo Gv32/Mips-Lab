@@ -1,6 +1,6 @@
                 .data
 
-term:           .asciiz "0"
+term:           .asciiz "\n"
 ast:            .asciiz "*"
 
                 .text
@@ -8,44 +8,69 @@ ast:            .asciiz "*"
                 .ent main
 
 stampaTriangolo:
-    
+    move $t0, $0                        # Indice 1
+    move $t1, $0                        # Indice 2
+    move $t2, $a0                       # Asterisco
+    move $t3, $a1                       # \n
+    addi $t4, $t4, 1
     ciclo1t:
 
+        li $v0, 4
+        move $a0, $t2
         ciclo2t:
+            syscall
+            addi $t1, $t1, 1
+        bne $t1, $t4, ciclo2t
+    sub $t1, $t1, $t4
+    addi $t4, $t4, 1
+    li $v0, 4
+    move $a0, $t3
+    syscall
+    addi $t0, $t0, 1
+    bne $t0, 8, ciclo1t
+    move $a0, $t2
+    move $a1, $t3
+    j $ra
 
 
 
 stampaQuadrato:
-    addi $t0, $t0, 0                    # Indice 1
-    addi $t1, $t1, 0                    # Indice 2
+    move $t0, $0                        # Indice 1
+    move $t1, $0                        # Indice 2
     move $t2, $a0                       # Asterisco
     move $t3, $a1                       # \n
     ciclo1q:
 
         li $v0, 4
-        move $a0, $t0
+        move $a0, $t2
         ciclo2q:
             syscall
             addi $t1, $t1, 1
         bne $t1, 8, ciclo2q
-    
+    addi $t1, $t1, -8
+    li $v0, 4
+    move $a0, $t3
+    syscall
+    addi $t0, $t0, 1
     bne $t0, 8, ciclo1q
+    move $a0, $t2
+    move $a1, $t3
+    j $ra
+
+
 
 
 
 main:
     la $t0, ast
     la $t1, term
-    li $v0, 4
     move $a0, $t0
-    syscall
-    li $v0, 4
-    move $a0, $t1
-    syscall
-    li $v0, 4
-    move $a0, $t0
-    syscall
+    move $a1, $t1
 
+    jal stampaTriangolo
     jal stampaQuadrato
+
+    li $v0, 10
+    syscall
 
 .end main
