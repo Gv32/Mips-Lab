@@ -35,6 +35,8 @@ stampaTriangolo:
     move $a1, $t3
     j $ra
 
+.end stampaTriangolo
+
 
 
 stampaQuadrato:
@@ -60,7 +62,7 @@ stampaQuadrato:
     move $a1, $t3
     j $ra
 
-
+.end stampaQuadrato
 
 
 

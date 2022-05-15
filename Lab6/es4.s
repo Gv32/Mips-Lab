@@ -13,11 +13,12 @@ massimo:
     addi $t1, $t1, 0                    #massimo
     mul $a1, $a1, 4
     for:
-        bgt $a0($t0), $t1, max
+
+        bgt $t0($a0), $t1, max
         j nm
 
     max:
-        move $t1, $a1($t0)
+        move $t1, $t0
     nm:
         addi $t0, $t0, 4
         bne $t0, $a1, for
@@ -26,9 +27,9 @@ massimo:
 
 
 main:
-    lw $a0, vet
+    la $a0, vet
     lw $a1, n
-    jal massimo
+    #jal massimo
 
 
 
