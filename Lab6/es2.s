@@ -10,6 +10,29 @@ msg:            .asciiz "Inserire la dimensione:"
                 .globl main
                 .ent main
 
+
+main:
+    la $a0, msg
+    li $v0, 4
+    syscall
+    li $v0, 5
+    syscall
+    move $a2, $v0
+    la $t0, ast
+    la $t1, term
+    move $a0, $t0
+    move $a1, $t1
+
+    jal stampaTriangolo
+    jal stampaQuadrato
+
+    li $v0, 10
+    syscall
+
+.end main
+
+
+
 stampaTriangolo:
     move $t0, $0                        # Indice 1
     move $t1, $0                        # Indice 2
@@ -63,25 +86,3 @@ stampaQuadrato:
     j $ra
 
 .end stampaQuadrato
-
-
-
-main:
-    la $a0, msg
-    li $v0, 4
-    syscall
-    li $v0, 5
-    syscall
-    move $a2, $v0
-    la $t0, ast
-    la $t1, term
-    move $a0, $t0
-    move $a1, $t1
-
-    jal stampaTriangolo
-    jal stampaQuadrato
-
-    li $v0, 10
-    syscall
-
-.end main

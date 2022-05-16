@@ -7,6 +7,24 @@ ast:            .asciiz "*"
                 .globl main
                 .ent main
 
+
+main:
+    la $t0, ast
+    la $t1, term
+    move $a0, $t0
+    move $a1, $t1
+
+    jal stampaTriangolo
+    jal stampaQuadrato
+
+    li $v0, 10
+    syscall
+
+.end main
+
+
+
+
 stampaTriangolo:
     move $t0, $0                        # Indice 1
     move $t1, $0                        # Indice 2
@@ -31,6 +49,9 @@ stampaTriangolo:
     move $a0, $t2
     move $a1, $t3
     j $ra
+
+
+.end stampaTriangolo
 
 
 
@@ -58,19 +79,4 @@ stampaQuadrato:
     j $ra
 
 
-
-
-
-main:
-    la $t0, ast
-    la $t1, term
-    move $a0, $t0
-    move $a1, $t1
-
-    jal stampaTriangolo
-    jal stampaQuadrato
-
-    li $v0, 10
-    syscall
-
-.end main
+.end stampaQuadrato
