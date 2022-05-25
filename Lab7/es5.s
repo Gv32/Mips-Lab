@@ -18,11 +18,15 @@ main:
     addi $s0, $s0, 4
     lw $a3, ($s0)
     for:
-        addi ($sp), ($sp), -4
+        addi $sp, $sp, -4
         addi $s0, $s0, 4
-        lw $sp, ($s0)
+        lw $t2, ($s0)
+        sw $t2, ($sp)
         addi $t0, $t0 ,1
         bne $t0, 5, for
+
+    li $v0, 10
+    syscall
 
 
 
