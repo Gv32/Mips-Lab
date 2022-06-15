@@ -35,17 +35,17 @@ bisestile:
     sb $t1, ($a1)
     b next
 
-no_100: li $t1, 4
-    divu $t0, $t1
-    mfhi $t1
-    bnez $t1, next
-    li $t1, 1
-    sb $t1, ($a1)
+    no_100: li $t1, 4
+        divu $t0, $t1
+        mfhi $t1
+        bnez $t1, next
+        li $t1, 1
+        sb $t1, ($a1)
 
-next: addiu $a0, 4
-    addiu $a1, 1
-    subu $a2, 1
-    bnez $a2, ciclo
-    jr $ra # return
+    next: addiu $a0, 4
+        addiu $a1, 1
+        subu $a2, 1
+        bnez $a2, ciclo
+        jr $ra # return
 
 .end bisestile
