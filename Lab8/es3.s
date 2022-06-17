@@ -10,7 +10,7 @@ main:
 
 .end main
 
-sdfvsdvvsdc
+sdfvsdvvsdcfsdfsd
 calcola_sconto:
 
 
