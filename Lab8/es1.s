@@ -32,6 +32,6 @@ costoParcheggio:
     lbu $t0, 1($a1)     # carico il secondo elemento di vettoreUscite
     lbu $t1, 1($a0)     # carico il secondo elemento di vettoreEntrate
     subu $t4, $t0, $t1  # calcolo la differenza
-    bge $t4
-    jr $ra
+    divu $t0, $a3
+
 .end costoParcheggio
