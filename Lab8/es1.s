@@ -18,20 +18,26 @@ main:
     lw $ra, ($sp)
     addiu $sp, $sp, 4
     jr $ra
-    li $v0, 10
-    syscall
 .end main
 
-costoParcheggio:
-    lbu $t0, ($a1)      # carico il primo elemento di vettoreUscite
-    lbu $t1, ($a0)      # carico il primo elemento di vettoreEntrate
-    subu $t0, $t0, $t1  # calcolo la differenza
-    li $t1, 60          # 60 minuti
-    multu $t0, $t1      # t0 * t1
-    mflo $t3            # converto le ore in minuti
-    lbu $t0, 1($a1)     # carico il secondo elemento di vettoreUscite
-    lbu $t1, 1($a0)     # carico il secondo elemento di vettoreEntrate
-    subu $t4, $t0, $t1  # calcolo la differenza
+costoParcheggio: 
+    lbu $t0, 0($a1)             # data la dimensione dei dati non puo’ verificarsi overflow
+    lbu $t1, 0($a0)
+    subu $t0, $t0, $t1
+    li $t1, 60
+    multu $t0, $t1
+    lbu $t0, 1($a1)
+    lbu $t1, 1($a0)
+    subu $t0, $t0, $t1
+    mflo $t1
+    addu $t0, $t0, $t1
     divu $t0, $a3
-
+    mflo $t0
+    mfhi $t1
+    beqz $t1, next
+    addiu $t0, $t0, 1
+next: 
+    multu $t0, $a2
+    mflo $v0
+    jr $ra # return
 .end costoParcheggio
